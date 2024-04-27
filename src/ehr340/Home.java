@@ -29,6 +29,11 @@ public class Home extends javax.swing.JFrame {
         btnAddPatient = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         btnDemo = new javax.swing.JButton();
+        btnMedHistory = new javax.swing.JButton();
+        btnAllergies = new javax.swing.JButton();
+        btnFamily = new javax.swing.JButton();
+        btnMedications = new javax.swing.JButton();
+        btnImmunizations = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,21 +95,70 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        btnMedHistory.setText("View Med. History");
+        btnMedHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMedHistoryActionPerformed(evt);
+            }
+        });
+
+        btnAllergies.setText("View Allergies");
+        btnAllergies.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAllergiesActionPerformed(evt);
+            }
+        });
+
+        btnFamily.setText("View Family");
+        btnFamily.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFamilyActionPerformed(evt);
+            }
+        });
+
+        btnMedications.setText("View Medications");
+
+        btnImmunizations.setText("View Immunization");
+        btnImmunizations.setToolTipText("");
+        btnImmunizations.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImmunizationsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnDemo)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnDemo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMedHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAllergies, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnFamily, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnMedications, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnImmunizations, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(btnDemo)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDemo)
+                    .addComponent(btnAllergies)
+                    .addComponent(btnMedications))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnMedHistory)
+                    .addComponent(btnFamily)
+                    .addComponent(btnImmunizations))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -159,6 +213,25 @@ public class Home extends javax.swing.JFrame {
         setVisible(false); //you can't see me!
         dispose();
     }//GEN-LAST:event_btnDemoActionPerformed
+
+    private void btnMedHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMedHistoryActionPerformed
+        GeneralMedicalHistory medHistory = new GeneralMedicalHistory(getPID());
+        medHistory.show(); 
+        setVisible(false); //you can't see me!
+        dispose();
+    }//GEN-LAST:event_btnMedHistoryActionPerformed
+
+    private void btnAllergiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllergiesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAllergiesActionPerformed
+
+    private void btnFamilyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFamilyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnFamilyActionPerformed
+
+    private void btnImmunizationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImmunizationsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnImmunizationsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -227,7 +300,12 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddPatient;
+    private javax.swing.JButton btnAllergies;
     private javax.swing.JButton btnDemo;
+    private javax.swing.JButton btnFamily;
+    private javax.swing.JButton btnImmunizations;
+    private javax.swing.JButton btnMedHistory;
+    private javax.swing.JButton btnMedications;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
