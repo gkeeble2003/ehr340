@@ -1,7 +1,17 @@
 package ehr340;
 
+import java.awt.Color;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
 public class AllergyHistory extends javax.swing.JFrame {
 int pid;
+private boolean viewMode = true;
     /**
      * Creates new form AllergyHistory
      */
@@ -13,6 +23,9 @@ int pid;
     {
         this.pid = patientid;
         initComponents();
+        loadAllergyHistory(pid);
+        setViewMode();
+        
     }
 
     /**
@@ -25,18 +38,18 @@ int pid;
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableAllergies = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnInterview = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtAllergen = new javax.swing.JTextField();
+        txtStartDate = new javax.swing.JTextField();
+        txtEndDate = new javax.swing.JTextField();
+        txtDescription = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         btnDemo = new javax.swing.JButton();
-        btnAllergies = new javax.swing.JButton();
+        btnMedHistory = new javax.swing.JButton();
         btnFamily = new javax.swing.JButton();
         btnMedications = new javax.swing.JButton();
         btnImmunizations = new javax.swing.JButton();
@@ -45,10 +58,12 @@ int pid;
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        btnSelect = new javax.swing.JButton();
+        btnViewMode = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableAllergies.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -59,13 +74,28 @@ int pid;
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableAllergies);
 
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnInterview.setText("Interview");
+        btnInterview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInterviewActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -74,10 +104,10 @@ int pid;
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnInterview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnInterview, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -88,7 +118,7 @@ int pid;
                 .addComponent(btnUpdate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnInterview)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         btnDemo.setText("View Demographics");
@@ -98,10 +128,10 @@ int pid;
             }
         });
 
-        btnAllergies.setText("View Allergies");
-        btnAllergies.addActionListener(new java.awt.event.ActionListener() {
+        btnMedHistory.setText("View Med. History");
+        btnMedHistory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAllergiesActionPerformed(evt);
+                btnMedHistoryActionPerformed(evt);
             }
         });
 
@@ -135,14 +165,14 @@ int pid;
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnDemo)
-                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAllergies, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnFamily, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                    .addComponent(btnFamily, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnMedHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnMedications, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnImmunizations, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
@@ -151,16 +181,16 @@ int pid;
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDemo)
-                    .addComponent(btnAllergies)
-                    .addComponent(btnMedications))
+                    .addComponent(btnMedHistory)
+                    .addComponent(btnMedications)
+                    .addComponent(btnHome))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFamily)
                     .addComponent(btnImmunizations)
-                    .addComponent(btnHome))
+                    .addComponent(btnDemo))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
@@ -172,65 +202,85 @@ int pid;
 
         jLabel4.setText("Description");
 
+        btnSelect.setText("Select");
+        btnSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectActionPerformed(evt);
+            }
+        });
+
+        btnViewMode.setText("Toggle View Mode");
+        btnViewMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewModeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                        .addComponent(jTextField2)
-                                        .addComponent(jTextField3))
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(12, 12, 12)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(110, 110, 110))))
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSelect)
+                        .addGap(23, 23, 23))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtAllergen, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                .addComponent(txtStartDate)
+                                .addComponent(txtEndDate))
+                            .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnViewMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(92, 92, 92))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnSelect, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtAllergen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtStartDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEndDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+                            .addComponent(txtDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnViewMode)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -239,6 +289,32 @@ int pid;
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void setViewMode() {
+        // Set text field enable/disable based on the mode
+        viewMode = !viewMode;
+        txtAllergen.setEditable(viewMode);
+        txtStartDate.setEditable(viewMode);
+        txtEndDate.setEditable(viewMode);
+        txtDescription.setEditable(viewMode);
+
+
+        if(viewMode == false)
+        {
+            txtAllergen.setBackground(Color.LIGHT_GRAY);
+            txtStartDate.setBackground(Color.LIGHT_GRAY);
+            txtEndDate.setBackground(Color.LIGHT_GRAY);
+            txtDescription.setBackground(Color.LIGHT_GRAY);
+
+        }
+        else
+        {
+            txtAllergen.setBackground(Color.WHITE);
+            txtStartDate.setBackground(Color.WHITE);
+            txtEndDate.setBackground(Color.WHITE);
+            txtDescription.setBackground(Color.WHITE);
+        }
+    }
+    
     private void btnDemoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDemoActionPerformed
         PatientDemo patientDemo = new PatientDemo(pid);
         patientDemo.show();
@@ -246,9 +322,12 @@ int pid;
         dispose();
     }//GEN-LAST:event_btnDemoActionPerformed
 
-    private void btnAllergiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllergiesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAllergiesActionPerformed
+    private void btnMedHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMedHistoryActionPerformed
+        GeneralMedicalHistory medHistory = new GeneralMedicalHistory(pid);
+        medHistory.show(); 
+        setVisible(false); //you can't see me!
+        dispose();
+    }//GEN-LAST:event_btnMedHistoryActionPerformed
 
     private void btnFamilyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFamilyActionPerformed
         // TODO add your handling code here:
@@ -264,6 +343,31 @@ int pid;
         setVisible(false);
         dispose();
     }//GEN-LAST:event_btnHomeActionPerformed
+
+    private void btnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectActionPerformed
+        fillBoxes();
+        //System.out.println(getAllergyID());
+    }//GEN-LAST:event_btnSelectActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        insertAllergyHistory(pid, txtAllergen.getText(), txtStartDate.getText(), txtEndDate.getText(), txtDescription.getText());
+        loadAllergyHistory(pid);
+        clearBoxes();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        updateAllergyHistory(getAllergyID(), pid, txtAllergen.getText(), txtStartDate.getText(), txtEndDate.getText(), txtDescription.getText());
+        loadAllergyHistory(pid);
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnInterviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInterviewActionPerformed
+        AllergyInterview interview = new AllergyInterview();
+            interview.conductInterview();
+    }//GEN-LAST:event_btnInterviewActionPerformed
+
+    private void btnViewModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewModeActionPerformed
+        setViewMode();
+    }//GEN-LAST:event_btnViewModeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -299,17 +403,205 @@ int pid;
             }
         });
     }
+    
+    private void loadAllergyHistory(int pid)
+    {
+        String qry = "SELECT * " + 
+                "FROM allergyhistorytable WHERE patientID = " + pid;
+        try
+        {
+            Connection con = ehr340.DBUtils.MakeConnection();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(qry);
+            DefaultTableModel tbl = new DefaultTableModel();
+            tbl.setColumnCount(7);
+            while(rs.next())
+            {
+                String tbData[] = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+                rs.getString(6), rs.getString(7)};
+                tbl.addRow(tbData);
+            }
+            tableAllergies.setModel(tbl);
+            con.close();
+        }
+        catch(Exception e){}
+    }
+
+    public int getAllergyID()
+        {
+            int row = tableAllergies.getSelectedRow();
+            Object item = tableAllergies.getValueAt(row, 0);
+            String iString = item.toString();
+            Integer value = Integer.valueOf(iString);
+            return value;
+        }
+    
+    private void fillBoxes()
+    {
+        int rowCount =  tableAllergies.getRowCount();
+        if(rowCount != 0 && tableAllergies.getSelectedRow() >= 0)
+        {
+            txtAllergen.setText(getStringValue(tableAllergies.getModel().getValueAt(tableAllergies.getSelectedRow(), 2)));
+            txtStartDate.setText(getStringValue(tableAllergies.getModel().getValueAt(tableAllergies.getSelectedRow(), 3)));
+            txtEndDate.setText(getStringValue(tableAllergies.getModel().getValueAt(tableAllergies.getSelectedRow(), 4)));
+            txtDescription.setText(getStringValue(tableAllergies.getModel().getValueAt(tableAllergies.getSelectedRow(), 5)));
+        }
+
+    }
+    private void clearBoxes()
+    {
+        txtAllergen.setText("");
+            txtStartDate.setText("");
+            txtEndDate.setText("");
+            txtDescription.setText("");
+    }
+    private String getStringValue(Object obj) 
+    {
+        return (obj != null) ? obj.toString() : "";
+    }
+    
+    private void insertAllergyHistory(int patientID, String allergen, String startDate, String endDate, String description)
+    {
+                String storedProcedureCall = "{call insertAllergy(?,?,?,?,?)}";
+
+        try 
+        {
+            Connection con = ehr340.DBUtils.MakeConnection();
+
+             CallableStatement statement = con.prepareCall(storedProcedureCall);
+                
+
+            // Set parameters for the stored procedure
+            
+            statement.setInt(1, patientID);
+            statement.setString(2, allergen);
+            statement.setString(3, startDate);
+            statement.setString(4, endDate);
+            statement.setString(5, description);
+
+            // Execute the stored procedure
+            statement.execute();
+            System.out.println("Allergy History updated successfully.");
+        } 
+        catch (Exception e) 
+        {
+            System.err.println("Error updating allergies: " + e.getMessage());
+        }
+    }
+    
+    private void updateAllergyHistory(int allergyID, int patientID, String allergen, String startDate, String endDate, String description)
+    {
+                String storedProcedureCall = "{call updateAllergyHistory(?,?,?,?,?,?)}";
+
+        try 
+        {
+            Connection con = ehr340.DBUtils.MakeConnection();
+
+             CallableStatement statement = con.prepareCall(storedProcedureCall);
+                
+
+            // Set parameters for the stored procedure
+            
+            statement.setInt(1, allergyID);
+            statement.setInt(2, patientID);
+            statement.setString(3, allergen);
+            statement.setString(4, startDate);
+            statement.setString(5, endDate);
+            statement.setString(6, description);
+
+            // Execute the stored procedure
+            statement.execute();
+            System.out.println("Allergy History updated successfully.");
+        } 
+        catch (Exception e) 
+        {
+            System.err.println("Error updating allergies: " + e.getMessage());
+        }
+    }
+    
+    class TreeNode {
+        String question;
+        TreeNode yesNode;
+        TreeNode noNode;
+        String timeSpan;
+
+        TreeNode(String question) {
+            this.question = question;
+        }
+    }
+
+    public class AllergyInterview {
+        private TreeNode root;
+
+        public AllergyInterview() {
+            createDecisionTree();
+        }
+
+        private void createDecisionTree() {
+            root = new TreeNode("Do you have an allergy?");
+            TreeNode startDateNode = new TreeNode("Did it start more than 1 year ago?");
+            root.yesNode = startDateNode;
+
+            TreeNode startDateMoreThan5Node = new TreeNode("Did it start more than 5 years ago?");
+            TreeNode startDateMoreThan10Node = new TreeNode("Did it start more than 10 years ago?");
+            startDateNode.yesNode = startDateMoreThan5Node;
+            startDateNode.noNode = startDateMoreThan10Node;
+
+            TreeNode endDateNode = new TreeNode("Has it ended?");
+            startDateMoreThan5Node.yesNode = endDateNode;
+            startDateMoreThan10Node.yesNode = endDateNode;
+        }
+
+        public void conductInterview() {
+            conductInterview(root);
+            txtStartDate.setText(root.timeSpan);
+            txtEndDate.setText(root.timeSpan);
+        }
+
+        private void conductInterview(TreeNode node) {
+            String response = JOptionPane.showInputDialog(node.question + " (Y/N)").toUpperCase();
+
+            if (response.equals("Y")) {
+                if (node.yesNode != null) {
+                    conductInterview(node.yesNode);
+                } else {
+                    node.timeSpan = "More than 1 year ago"; // Default time span
+                }
+            } else if (response.equals("N")) {
+                if (node.noNode != null) {
+                    conductInterview(node.noNode);
+                } else {
+                    // No further questions, take the latest "Yes" response as time span
+                    if (node.question.contains("10")) {
+                        node.timeSpan = "More than 10 years ago";
+                    } else if (node.question.contains("5")) {
+                        node.timeSpan = "More than 5 years ago";
+                    } else {
+                        node.timeSpan = "More than 1 year ago";
+                    }
+                }
+            } else {
+                // Invalid response
+                JOptionPane.showMessageDialog(null, "Invalid response. Exiting interview.");
+                return;
+            }
+        }
+
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnAllergies;
     private javax.swing.JButton btnDemo;
     private javax.swing.JButton btnFamily;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnImmunizations;
     private javax.swing.JButton btnInterview;
+    private javax.swing.JButton btnMedHistory;
     private javax.swing.JButton btnMedications;
+    private javax.swing.JButton btnSelect;
     private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnViewMode;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -317,10 +609,10 @@ int pid;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable tableAllergies;
+    private javax.swing.JTextField txtAllergen;
+    private javax.swing.JTextField txtDescription;
+    private javax.swing.JTextField txtEndDate;
+    private javax.swing.JTextField txtStartDate;
     // End of variables declaration//GEN-END:variables
 }

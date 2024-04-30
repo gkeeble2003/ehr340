@@ -2,12 +2,15 @@ package ehr340;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
 import ehr340.DBUtils;
+import java.awt.Color;
 
 public class Home extends javax.swing.JFrame {
+    private boolean viewMode = true;
 
     public Home() {
         initComponents();
         loadTable();
+//        setViewMode();
 
     }
 
@@ -190,6 +193,29 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void setViewMode() {
+        // Set text field enable/disable based on the mode
+        viewMode = !viewMode;
+        txtLastName.setEditable(viewMode);
+        txtFirstName.setEditable(viewMode);
+        txtDOB.setEditable(viewMode);
+
+
+        if(viewMode == false)
+        {
+            txtLastName.setBackground(Color.LIGHT_GRAY);
+            txtFirstName.setBackground(Color.LIGHT_GRAY);
+            txtDOB.setBackground(Color.LIGHT_GRAY);
+
+        }
+        else
+        {
+            txtLastName.setBackground(Color.WHITE);
+            txtFirstName.setBackground(Color.WHITE);
+            txtDOB.setBackground(Color.WHITE);
+        }
+    }
+    
     private void btnAddPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPatientActionPerformed
         
         try
@@ -222,7 +248,10 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMedHistoryActionPerformed
 
     private void btnAllergiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllergiesActionPerformed
-        // TODO add your handling code here:
+        AllergyHistory allergyHistory = new AllergyHistory(getPID());
+        allergyHistory.show();
+        setVisible(false);
+        dispose();
     }//GEN-LAST:event_btnAllergiesActionPerformed
 
     private void btnFamilyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFamilyActionPerformed

@@ -1,5 +1,6 @@
 package ehr340;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -8,6 +9,7 @@ import java.sql.*;
 
 public class PatientDemo extends javax.swing.JFrame {
 int pid;
+private boolean viewMode = true;
 
     public PatientDemo() {
         initComponents();
@@ -20,6 +22,7 @@ int pid;
         initComponents();
         loadDemographics(pid);
         fillBoxes();
+        setViewMode();
         
     }
 
@@ -81,6 +84,7 @@ int pid;
         jLabel22 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btnSubmit = new javax.swing.JButton();
+        btnViewMode = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnAllergies = new javax.swing.JButton();
         btnFamily = new javax.swing.JButton();
@@ -162,21 +166,32 @@ int pid;
             }
         });
 
+        btnViewMode.setText("Toggle View Mode");
+        btnViewMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewModeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(btnSubmit)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSubmit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewMode, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addGap(15, 15, 15)
                 .addComponent(btnSubmit)
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnViewMode)
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         btnAllergies.setText("View Allergies");
@@ -222,13 +237,13 @@ int pid;
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                    .addComponent(btnMedHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(btnMedHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAllergies, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                    .addComponent(btnAllergies, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                     .addComponent(btnFamily, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -243,13 +258,13 @@ int pid;
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAllergies)
                     .addComponent(btnMedications)
-                    .addComponent(btnMedHistory))
+                    .addComponent(btnHome))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFamily)
                     .addComponent(btnImmunizations)
-                    .addComponent(btnHome))
-                .addContainerGap(29, Short.MAX_VALUE))
+                    .addComponent(btnMedHistory))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -427,7 +442,7 @@ int pid;
             .addGroup(layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -446,6 +461,85 @@ int pid;
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCommentsActionPerformed
 
+    private void setViewMode() {
+        // Set text field enable/disable based on the mode
+        viewMode = !viewMode;
+        txtLastName.setEditable(viewMode);
+        txtPrevLastName.setEditable(viewMode);
+        txtFirstName.setEditable(viewMode);
+        txtAddress.setEditable(viewMode);
+        txtCity.setEditable(viewMode);
+        txtState.setEditable(viewMode);
+        txtZip.setEditable(viewMode);
+        txtCountry.setEditable(viewMode);
+        txtCitizenship.setEditable(viewMode);
+        txtHomePhone.setEditable(viewMode);
+        txtMobilePhone.setEditable(viewMode);
+        txtEmergencyPhone.setEditable(viewMode);
+        txtEmail.setEditable(viewMode);
+        txtPtSS.setEditable(viewMode);
+        txtDOB.setEditable(viewMode);
+        txtGender.setEditable(viewMode);
+        txtEthnicity.setEditable(viewMode);
+        txtMaritalStatus.setEditable(viewMode);
+        txtHCP.setEditable(viewMode);
+        txtComments.setEditable(viewMode);
+        txtNextOfKin.setEditable(viewMode);
+        txtRelationship.setEditable(viewMode);
+
+        if(viewMode == false)
+        {
+            txtLastName.setBackground(Color.LIGHT_GRAY);
+            txtPrevLastName.setBackground(Color.LIGHT_GRAY);
+            txtFirstName.setBackground(Color.LIGHT_GRAY);
+            txtAddress.setBackground(Color.LIGHT_GRAY);
+            txtCity.setBackground(Color.LIGHT_GRAY);
+            txtState.setBackground(Color.LIGHT_GRAY);
+            txtZip.setBackground(Color.LIGHT_GRAY);
+            txtCountry.setBackground(Color.LIGHT_GRAY);
+            txtCitizenship.setBackground(Color.LIGHT_GRAY);
+            txtHomePhone.setBackground(Color.LIGHT_GRAY);
+            txtMobilePhone.setBackground(Color.LIGHT_GRAY);
+            txtEmergencyPhone.setBackground(Color.LIGHT_GRAY);
+            txtEmail.setBackground(Color.LIGHT_GRAY);
+            txtPtSS.setBackground(Color.LIGHT_GRAY);
+            txtDOB.setBackground(Color.LIGHT_GRAY);
+            txtGender.setBackground(Color.LIGHT_GRAY);
+            txtEthnicity.setBackground(Color.LIGHT_GRAY);
+            txtMaritalStatus.setBackground(Color.LIGHT_GRAY);
+            txtHCP.setBackground(Color.LIGHT_GRAY);
+            txtComments.setBackground(Color.LIGHT_GRAY);
+            txtNextOfKin.setBackground(Color.LIGHT_GRAY);
+            txtRelationship.setBackground(Color.LIGHT_GRAY);
+
+        }
+        else
+        {
+            txtLastName.setBackground(Color.WHITE);
+            txtPrevLastName.setBackground(Color.WHITE);
+            txtFirstName.setBackground(Color.WHITE);
+            txtAddress.setBackground(Color.WHITE);
+            txtCity.setBackground(Color.WHITE);
+            txtState.setBackground(Color.WHITE);
+            txtZip.setBackground(Color.WHITE);
+            txtCountry.setBackground(Color.WHITE);
+            txtCitizenship.setBackground(Color.WHITE);
+            txtHomePhone.setBackground(Color.WHITE);
+            txtMobilePhone.setBackground(Color.WHITE);
+            txtEmergencyPhone.setBackground(Color.WHITE);
+            txtEmail.setBackground(Color.WHITE);
+            txtPtSS.setBackground(Color.WHITE);
+            txtDOB.setBackground(Color.WHITE);
+            txtGender.setBackground(Color.WHITE);
+            txtEthnicity.setBackground(Color.WHITE);
+            txtMaritalStatus.setBackground(Color.WHITE);
+            txtHCP.setBackground(Color.WHITE);
+            txtComments.setBackground(Color.WHITE);
+            txtNextOfKin.setBackground(Color.WHITE);
+            txtRelationship.setBackground(Color.WHITE);
+        }
+    }
+    
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         updateDemographics(pid, txtLastName.getText(), txtPrevLastName.getText(), txtFirstName.getText(),
                 txtAddress.getText(), txtCity.getText(), txtState.getText(), txtZip.getText(),
@@ -458,7 +552,10 @@ int pid;
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnAllergiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllergiesActionPerformed
-        // TODO add your handling code here:
+        AllergyHistory allergyHistory = new AllergyHistory(pid);
+        allergyHistory.show();
+        setVisible(false);
+        dispose();
     }//GEN-LAST:event_btnAllergiesActionPerformed
 
     private void btnFamilyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFamilyActionPerformed
@@ -482,6 +579,10 @@ int pid;
         setVisible(false); //you can't see me!
         dispose();
     }//GEN-LAST:event_btnMedHistoryActionPerformed
+
+    private void btnViewModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewModeActionPerformed
+        setViewMode();
+    }//GEN-LAST:event_btnViewModeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -635,6 +736,7 @@ int pid;
     private javax.swing.JButton btnMedHistory;
     private javax.swing.JButton btnMedications;
     private javax.swing.JButton btnSubmit;
+    private javax.swing.JButton btnViewMode;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
