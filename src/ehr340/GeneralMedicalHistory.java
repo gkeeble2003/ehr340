@@ -158,6 +158,7 @@ private void conductInterview(TreeNode node) {
         btnInterview = new javax.swing.JButton();
         btnBlood = new javax.swing.JButton();
         btnViewMode = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMedicalHistory = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
@@ -192,15 +193,16 @@ private void conductInterview(TreeNode node) {
         txtDrugDuration = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("General Medical History");
 
-        jButton1.setText("Add");
+        jButton1.setText("New");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        btnUpdate.setText("Update");
+        btnUpdate.setText("Edit");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateActionPerformed(evt);
@@ -228,6 +230,13 @@ private void conductInterview(TreeNode node) {
             }
         });
 
+        btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -239,7 +248,8 @@ private void conductInterview(TreeNode node) {
                     .addComponent(btnInterview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnViewMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnViewMode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -255,6 +265,8 @@ private void conductInterview(TreeNode node) {
                 .addComponent(btnBlood)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnViewMode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDelete)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -295,6 +307,11 @@ private void conductInterview(TreeNode node) {
         });
 
         btnMedications.setText("View Medications");
+        btnMedications.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMedicationsActionPerformed(evt);
+            }
+        });
 
         btnImmunizations.setText("View Immunization");
         btnImmunizations.setToolTipText("");
@@ -505,6 +522,7 @@ private void conductInterview(TreeNode node) {
                 txtBloodType.getText(), txtRh.getText());
         loadMedicalHistory(pid);
         fillBoxes();
+        setViewMode();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -513,6 +531,7 @@ private void conductInterview(TreeNode node) {
                 txtBloodType.getText(), txtRh.getText());
         loadMedicalHistory(pid);
         fillBoxes();
+        setViewMode();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDemoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDemoActionPerformed
@@ -557,6 +576,28 @@ private void conductInterview(TreeNode node) {
         setViewMode();
     }//GEN-LAST:event_btnViewModeActionPerformed
 
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        String update = "UPDATE generalmedicalhistorytable " + 
+        "SET deleted = 1 WHERE patientID = " + pid;
+        try
+        {
+            Connection con = ehr340.DBUtils.MakeConnection();
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate(update);
+            con.close();
+        }
+        catch(Exception e){}
+        loadMedicalHistory(pid);
+        fillBoxes();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnMedicationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMedicationsActionPerformed
+        Medications medications = new Medications(pid);
+        medications.show();
+        setVisible(false);
+        dispose();
+    }//GEN-LAST:event_btnMedicationsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -595,7 +636,7 @@ private void conductInterview(TreeNode node) {
     private void loadMedicalHistory(int pid)
     {
         String qry = "SELECT * " + 
-                "FROM generalmedicalhistorytable WHERE patientID = " + pid;
+                "FROM generalmedicalhistorytable WHERE patientID = " + pid + " AND deleted = 0";
         try
         {
             Connection con = ehr340.DBUtils.MakeConnection();
@@ -736,6 +777,7 @@ private void conductInterview(TreeNode node) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAllergies;
     private javax.swing.JButton btnBlood;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnDemo;
     private javax.swing.JButton btnFamily;
     private javax.swing.JButton btnHome;

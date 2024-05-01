@@ -39,6 +39,7 @@ public class Home extends javax.swing.JFrame {
         btnImmunizations = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Home");
 
         tablePatients.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -120,6 +121,11 @@ public class Home extends javax.swing.JFrame {
         });
 
         btnMedications.setText("View Medications");
+        btnMedications.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMedicationsActionPerformed(evt);
+            }
+        });
 
         btnImmunizations.setText("View Immunization");
         btnImmunizations.setToolTipText("");
@@ -261,6 +267,13 @@ public class Home extends javax.swing.JFrame {
     private void btnImmunizationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImmunizationsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnImmunizationsActionPerformed
+
+    private void btnMedicationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMedicationsActionPerformed
+        Medications medications = new Medications(getPID());
+        medications.show();
+        setVisible(false);
+        dispose();
+    }//GEN-LAST:event_btnMedicationsActionPerformed
 
     /**
      * @param args the command line arguments

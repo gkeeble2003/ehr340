@@ -94,6 +94,7 @@ private boolean viewMode = true;
         btnMedHistory = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Demographics");
 
         tableDemographics.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,7 +159,7 @@ private boolean viewMode = true;
 
         jLabel22.setText("Comments");
 
-        btnSubmit.setText("Update");
+        btnSubmit.setText("Edit");
         btnSubmit.setToolTipText("");
         btnSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,6 +210,11 @@ private boolean viewMode = true;
         });
 
         btnMedications.setText("View Medications");
+        btnMedications.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMedicationsActionPerformed(evt);
+            }
+        });
 
         btnImmunizations.setText("View Immunization");
         btnImmunizations.setToolTipText("");
@@ -243,7 +249,7 @@ private boolean viewMode = true;
                     .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAllergies, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                    .addComponent(btnAllergies, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                     .addComponent(btnFamily, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -549,6 +555,7 @@ private boolean viewMode = true;
                 txtComments.getText(), txtNextOfKin.getText(), txtRelationship.getText());
         loadDemographics(pid);
         fillBoxes();
+        setViewMode();
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnAllergiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllergiesActionPerformed
@@ -583,6 +590,13 @@ private boolean viewMode = true;
     private void btnViewModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewModeActionPerformed
         setViewMode();
     }//GEN-LAST:event_btnViewModeActionPerformed
+
+    private void btnMedicationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMedicationsActionPerformed
+        Medications medications = new Medications(pid);
+        medications.show();
+        setVisible(false);
+        dispose();
+    }//GEN-LAST:event_btnMedicationsActionPerformed
 
     /**
      * @param args the command line arguments
