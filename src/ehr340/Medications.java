@@ -360,7 +360,7 @@ private boolean viewMode = true;
         insertMedication(pid, txtMedication.getText(), txtQuantity.getText(), txtUnit.getText(), txtHCP.getText(),txtOrderDate.getText(),
                 txtInstructions.getText(),txtStartDate.getText(), txtEndDate.getText());
         loadMedications(pid);
-        clearBoxes();
+        //clearBoxes();
         setViewMode();
     }//GEN-LAST:event_btnAddActionPerformed
 

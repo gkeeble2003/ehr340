@@ -317,6 +317,7 @@ public class Home extends javax.swing.JFrame {
             Integer value = Integer.valueOf(iString);
             return value;
         }
+
     private void loadTable()
     {
         String qry = "SELECT PatientID, PTLastName, PTFirstName, DOB " + 
